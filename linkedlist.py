@@ -55,7 +55,7 @@ class LinkedList:
             new_node.next = self.head
             self.head = new_node
         self.length += 1
-        return new_node
+        return True
     
     def insert(self, index, value):
         if index < 0 or index > self.length:
