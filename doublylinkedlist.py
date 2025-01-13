@@ -43,7 +43,7 @@ class DoublyLinkedList:
             new_node.next = self.head
             self.head = new_node
         self.length += 1
-        return new_node
+        return True
 
     def get(self, index) -> Node:
         if index < 0 or index >= self.length:
@@ -90,10 +90,10 @@ class DoublyLinkedList:
             self.head = None
             self.tail = None
         else:
-            prev_node = self.tail.prev
+            prev_node = current.prev
             prev_node.next = None
-            self.tail = prev_node
             current.prev = None
+            self.tail = prev_node
         self.length -= 1
         return current
             

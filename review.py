@@ -2,6 +2,7 @@ class Node:
     def __init__(self, value):
         self.value = value
         self.next = None
+        self.prev = None
 
 class LinkedList:
     def __init__(self, value = None):
@@ -23,9 +24,14 @@ class LinkedList:
     def get(self, index) -> Node:
         if index < 0 or index >= self.length:
             return None
-        current = self.head
-        for _ in range(index):
-            current = current.next
+        if index > self.length / 2:
+            current = self.tail
+            for _ in range(self.length - 1, index, -1):
+                current = current.prev
+        else:
+            current = self.head
+            for _ in range(index):
+                current = current.next
         return current
 
     def set_value(self, index, value) -> bool:
@@ -42,6 +48,7 @@ class LinkedList:
             self.tail = new_node
         else:
             self.tail.next = new_node
+            new_node.prev = self.tail
             self.tail = new_node
         self.length += 1
         return True
@@ -53,6 +60,7 @@ class LinkedList:
             self.tail = new_node
         else:
             new_node.next = self.head
+            self.head.prev = new_node
             self.head = new_node
         self.length += 1
         return True
@@ -65,25 +73,26 @@ class LinkedList:
         if index == self.length:
             return self.append(value)
         new_node = Node(value)
-        prev_node = self.get(index - 1)
-        new_node.next = prev_node.next
+        current = self.get(index)
+        prev_node = current.prev
         prev_node.next = new_node
+        new_node.prev = prev_node
+        new_node.next = current
+        current.prev = new_node
         self.length += 1
         return True
-    
+
     def pop(self) -> Node:
         if self.length == 0:
             return None
-        current = self.head
+        current = self.tail
         if self.length == 1:
             self.head = None
             self.tail = None
         else:
-            prev_node = self.head
-            while current.next:
-                prev_node = current
-                current = current.next
+            prev_node = current.prev
             prev_node.next = None
+            current.prev = None
             self.tail = prev_node
         self.length -= 1
         return current
@@ -96,8 +105,10 @@ class LinkedList:
             self.head = None
             self.tail = None
         else:
-            self.head = current.next
+            next_node = current.next
+            next_node.prev = None
             current.next = None
+            self.head = next_node
         self.length -= 1
         return current
     
@@ -108,12 +119,15 @@ class LinkedList:
             return self.pop_first()
         if index == self.length - 1:
             return self.pop()
-        prev_node = self.get(index - 1)
-        target_node = prev_node.next
-        prev_node.next = target_node.next
-        target_node.next = None
+        current = self.get(index)
+        prev_node = current.prev
+        next_node = current.next
+        prev_node.next = next_node
+        next_node.prev = prev_node
+        current.next = None
+        current.prev = None
         self.length -= 1
-        return target_node
+        return current
 
 ll = LinkedList()
 ll.append(1)
