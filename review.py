@@ -138,5 +138,3 @@ ll.set_value(3, 3)
 ll.print_list()
 print(ll.pop_first().value)
 print(ll.pop().value)
-
-ll.print_list()
